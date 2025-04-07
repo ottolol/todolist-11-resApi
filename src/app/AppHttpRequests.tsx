@@ -89,8 +89,26 @@ export const AppHttpRequests = () => {
       });
   };
 
-  const changeTodolistTitle = (id: string, title: string) => {};
-
+  const changeTodolistTitle = (id: string, title: string) => {
+    axios
+      .put(
+        `https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`,
+        { title }, // Данные для PUT-запроса
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "API-KEY": apiKey,
+          },
+        }
+      )
+      .then(() => {
+        setTodolists(
+          todolists.map((todolist) =>
+            todolist.id === id ? { ...todolist, title } : todolist
+          )
+        );
+      });
+  };
   const createTask = (todolistId: string, title: string) => {};
 
   const deleteTask = (todolistId: string, taskId: string) => {};
