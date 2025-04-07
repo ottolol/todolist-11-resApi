@@ -81,7 +81,12 @@ export const AppHttpRequests = () => {
           },
         }
       )
-      .then((res) => setTodolists(res.data.data.filter((tl) => tl.id !== id)));
+      .then(() => {
+        const deletedTodoList = todolists.filter(
+          (todolist) => todolist.id !== id
+        );
+        setTodolists([...deletedTodoList]);
+      });
   };
 
   const changeTodolistTitle = (id: string, title: string) => {};
