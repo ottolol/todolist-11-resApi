@@ -1,5 +1,3 @@
-import {EditableSpan} from '@/common/components/EditableSpan/EditableSpan'
-import {useAppDispatch} from '@/common/hooks/useAppDispatch'
 import {
   changeTaskStatusAC,
   changeTaskTitleAC,
@@ -12,6 +10,8 @@ import IconButton from '@mui/material/IconButton'
 import ListItem from '@mui/material/ListItem'
 import type {ChangeEvent} from 'react'
 import {getListItemSx} from './TaskItem.styles'
+import { useAppDispatch } from '@/common/hooks'
+import { EditableSpan } from '@/common/components'
 
 type Props = {
   task: Task
