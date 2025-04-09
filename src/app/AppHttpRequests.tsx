@@ -8,30 +8,27 @@ import Checkbox from "@mui/material/Checkbox";
 import { CreateItemForm, EditableSpan } from "@/common/components";
 import { BaseResponse } from "@/common/types";
 import { instance } from "@/common/instance/instance";
-
-const token = "xxx";
-const apiKey = "xxx";
-
-export type Todolist = {
-  id: string;
-  title: string;
-  addedDate: string;
-  order: number;
-};
+import { Todolist } from "@/features/todolists/api/todolistsApi.types";
+import { todolistsApi } from "@/features/todolists/api/todolistsApi";
 
 export const AppHttpRequests = () => {
   const [todolists, setTodolists] = useState<Todolist[]>([]);
   const [tasks, setTasks] = useState<any>({});
 
+  // useEffect до создания todolistsApi
+  // useEffect(() => {
+  //   instance
+  //     .get("/todo-lists")
+  //     .then((res) => setTodolists(res.data));
+  // }, []);
+
+  // useEffect после создания todolistsApi
   useEffect(() => {
-    instance
-      .get("/todo-lists")
-      .then((res) => setTodolists(res.data));
-  }, []);
+    todolistsApi.getTodolists().then(res => setTodolists(res.data))
+  }, [])
 
   const createTodolist = (title: string) => {
-    instance
-      .post<BaseResponse<{item: Todolist}>>("/todo-lists", { title })
+    todolistsApi.createTodolist({title})
       .then((res) => {
         const newTodolist = res.data.data.item;
         setTodolists([newTodolist, ...todolists]);
@@ -39,8 +36,7 @@ export const AppHttpRequests = () => {
   };
 
   const deleteTodolist = (id: string) => {
-    instance
-      .delete<BaseResponse>(`/todo-lists/${id}`)
+    todolistsApi.deleteTodolist({id})
       .then(() => {
         const deletedTodoList = todolists.filter(
           (todolist) => todolist.id !== id
@@ -49,10 +45,23 @@ export const AppHttpRequests = () => {
       });
   };
 
+  // changeTodolistTitle до создания todolistsApi
+  // const changeTodolistTitle = (id: string, title: string) => {
+  //   // { title } - Данные для PUT-запроса
+  //   instance
+  //     .put<BaseResponse>(`/todo-lists/${id}`, { title })
+  //     .then(() => {
+  //       setTodolists(
+  //         todolists.map((todolist) =>
+  //           todolist.id === id ? { ...todolist, title } : todolist
+  //         )
+  //       );
+  //     });
+  // };
+
+  // changeTodolistTitle после создания todolistsApi
   const changeTodolistTitle = (id: string, title: string) => {
-    // { title } - Данные для PUT-запроса
-    instance
-      .put<BaseResponse>(`/todo-lists/${id}`, { title })
+    todolistsApi.changeTodolistTitle({id, title})
       .then(() => {
         setTodolists(
           todolists.map((todolist) =>
