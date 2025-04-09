@@ -5,10 +5,9 @@ import {
   useState,
 } from "react";
 import Checkbox from "@mui/material/Checkbox";
-import { CreateItemForm } from "@/common/components/CreateItemForm/CreateItemForm";
-import { EditableSpan } from "@/common/components/EditableSpan/EditableSpan";
 import axios from "axios";
-import { BaseResponse } from "@/common/types/types";
+import { CreateItemForm, EditableSpan } from "@/common/components";
+import { BaseResponse } from "@/common/types";
 
 const token = "xxx";
 const apiKey = "xxx";
