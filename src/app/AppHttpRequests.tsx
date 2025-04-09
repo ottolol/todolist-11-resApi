@@ -8,6 +8,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { CreateItemForm } from "@/common/components/CreateItemForm/CreateItemForm";
 import { EditableSpan } from "@/common/components/EditableSpan/EditableSpan";
 import axios from "axios";
+import { BaseResponse } from "@/common/types/types";
 
 const token = "xxx";
 const apiKey = "xxx";
@@ -17,25 +18,6 @@ export type Todolist = {
   title: string;
   addedDate: string;
   order: number;
-};
-
-type FieldError = {
-  error: string;
-  field: string;
-};
-
-type CreateTodolistResponse = {
-  data: { item: Todolist };
-  resultCode: number;
-  messages: string[];
-  fieldsErrors: FieldError[];
-};
-
-type DeleteTodolistResponse = {
-  data: {};
-  resultCode: number;
-  messages: string[];
-  fieldsErrors: FieldError[];
 };
 
 export const AppHttpRequests = () => {
@@ -54,7 +36,7 @@ export const AppHttpRequests = () => {
 
   const createTodolist = (title: string) => {
     axios
-      .post<CreateTodolistResponse>(
+      .post<BaseResponse<{item: Todolist}>>(
         "https://social-network.samuraijs.com/api/1.1/todo-lists",
         { title },
         {
@@ -72,7 +54,7 @@ export const AppHttpRequests = () => {
 
   const deleteTodolist = (id: string) => {
     axios
-      .delete<DeleteTodolistResponse>(
+      .delete<BaseResponse>(
         `https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`,
         {
           headers: {
@@ -91,7 +73,7 @@ export const AppHttpRequests = () => {
 
   const changeTodolistTitle = (id: string, title: string) => {
     axios
-      .put(
+      .put<BaseResponse>(
         `https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`,
         { title }, // Данные для PUT-запроса
         {
