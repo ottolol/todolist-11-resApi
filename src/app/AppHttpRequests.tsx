@@ -5,9 +5,9 @@ import {
   useState,
 } from "react";
 import Checkbox from "@mui/material/Checkbox";
-import axios from "axios";
 import { CreateItemForm, EditableSpan } from "@/common/components";
 import { BaseResponse } from "@/common/types";
+import { instance } from "@/common/instance/instance";
 
 const token = "xxx";
 const apiKey = "xxx";
@@ -24,27 +24,14 @@ export const AppHttpRequests = () => {
   const [tasks, setTasks] = useState<any>({});
 
   useEffect(() => {
-    axios
-      .get("https://social-network.samuraijs.com/api/1.1/todo-lists", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    instance
+      .get("/todo-lists")
       .then((res) => setTodolists(res.data));
   }, []);
 
   const createTodolist = (title: string) => {
-    axios
-      .post<BaseResponse<{item: Todolist}>>(
-        "https://social-network.samuraijs.com/api/1.1/todo-lists",
-        { title },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "API-KEY": apiKey,
-          },
-        }
-      )
+    instance
+      .post<BaseResponse<{item: Todolist}>>("/todo-lists", { title })
       .then((res) => {
         const newTodolist = res.data.data.item;
         setTodolists([newTodolist, ...todolists]);
@@ -52,36 +39,20 @@ export const AppHttpRequests = () => {
   };
 
   const deleteTodolist = (id: string) => {
-    axios
-      .delete<BaseResponse>(
-        `https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "API-KEY": apiKey,
-          },
-        }
-      )
+    instance
+      .delete<BaseResponse>(`/todo-lists/${id}`)
       .then(() => {
         const deletedTodoList = todolists.filter(
           (todolist) => todolist.id !== id
         );
-        setTodolists([...deletedTodoList]);
+        setTodolists(deletedTodoList);
       });
   };
 
   const changeTodolistTitle = (id: string, title: string) => {
-    axios
-      .put<BaseResponse>(
-        `https://social-network.samuraijs.com/api/1.1/todo-lists/${id}`,
-        { title }, // Данные для PUT-запроса
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "API-KEY": apiKey,
-          },
-        }
-      )
+    // { title } - Данные для PUT-запроса
+    instance
+      .put<BaseResponse>(`/todo-lists/${id}`, { title })
       .then(() => {
         setTodolists(
           todolists.map((todolist) =>
